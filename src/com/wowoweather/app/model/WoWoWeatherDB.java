@@ -41,7 +41,7 @@ public class WoWoWeatherDB {
     	 if(cursor.moveToFirst()){
     		 do{
     			 Province province = new Province();
-    			 province.setProvinceId(cursor.getInt(cursor.getColumnIndex("provinceId")));
+    			 province.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
     			 province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
     			 province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
     			 list.add(province);
@@ -49,7 +49,7 @@ public class WoWoWeatherDB {
     	 }
     	 return list;
      }
-     public void setCity(City city){
+     public void saveCity(City city){
     	 if(city != null){
     		 ContentValues values = new ContentValues();
     	     values.put("city_name", city.getCityName());
@@ -73,7 +73,7 @@ public class WoWoWeatherDB {
     	 }
     	 return list;
      }
-     public void setCounty(County county){
+     public void saveCounty(County county){
     	 if(county != null){
     		 ContentValues values = new ContentValues();
     	     values.put("county_name", county.getCountyName());
