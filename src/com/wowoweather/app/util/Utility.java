@@ -1,11 +1,21 @@
 package com.wowoweather.app.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.json.JSONObject;
+
 import com.wowoweather.app.model.City;
 import com.wowoweather.app.model.County;
 import com.wowoweather.app.model.Province;
 import com.wowoweather.app.model.WoWoWeatherDB;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class Utility {
     public synchronized static boolean handleProvincesResponse(WoWoWeatherDB wowoWeatherDB, String response){
@@ -58,4 +68,37 @@ public class Utility {
     	  }
     	  return false;
     } 
+    
+    public static void handleWeatherResponse(Context context,String response){
+    	try{
+    		JSONObject jsonObeject = new JSONObject(response);
+    		JSONObject weatherInfo = jsonObeject.getJSONObject("weatherinfo");
+    		String cityName = weatherInfo.getString("city");
+    		String weatherCode = weatherInfo.getString("cityid");
+    		String temp1 = weatherInfo.getString("temp1");
+    		String temp2 = weatherInfo.getString("temp2");
+    		String weatherDesp = weatherInfo.getString("weather");
+    		String pubishTime = weatherInfo.getString("ptime");
+    		//Log.d("HEHEHEHEHEHEH",temp1);
+    		saveWeatherInfo(context,cityName,weatherCode,temp1,temp2,weatherDesp,pubishTime);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    }
+	public static void saveWeatherInfo(Context context, String cityName,
+			String weatherCode, String temp1, String temp2, String weatherDesp,
+			String pubishTime) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyƒÍM‘¬d»’", Locale.CHINA);
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		editor.putBoolean("city_selected", true);
+		editor.putString("city_name", cityName);
+		editor.putString("weather_code", weatherCode);
+		editor.putString("temp1", temp1);
+		editor.putString("temp2", temp2);
+		editor.putString("weather_desp", weatherDesp);
+		editor.putString("publish_time", pubishTime);
+		editor.putString("current_date",sdf.format(new Date()));
+		editor.commit();
+	}
 }

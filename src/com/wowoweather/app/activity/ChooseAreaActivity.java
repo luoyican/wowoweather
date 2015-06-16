@@ -14,7 +14,10 @@ import com.wowoweather.app.util.Utility;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +51,13 @@ public class ChooseAreaActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("city_selected", false)){
+			Intent intent = new Intent(this,ChooseAreaActivity.class);
+		    startActivity(intent);
+		    finish();
+		    return;
+		}
 	    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setContentView(R.layout.choose_area);
 	    listView = (ListView) findViewById(R.id.list_view);
@@ -67,6 +77,12 @@ public class ChooseAreaActivity extends Activity{
 				}else if(currentLevel == CITY_LEVEL){
 					selectCity = cityList.get(position);
 					queryCounties();
+				}else if(currentLevel == COUNTY_LEVEL){
+					String countyCode = countyList.get(position).getCountyCode();
+					Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+					intent.putExtra("county_code", countyCode);
+					startActivity(intent);
+					finish();
 				}
 			}
 		});
@@ -81,7 +97,7 @@ public class ChooseAreaActivity extends Activity{
 		   }
 		   adapter.notifyDataSetChanged();
 		   listView.setSelection(0);
-		   titleText.setText("中国【表情】");
+		   titleText.setText("中国");
 		   currentLevel = PROVINCE_LEVEL;
 	   }else{
 		   queryFromServer(null,"province");
