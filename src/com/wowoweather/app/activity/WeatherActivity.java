@@ -2,6 +2,7 @@ package com.wowoweather.app.activity;
 
 
 import com.wowoweather.app.R;
+import com.wowoweather.app.service.AutoUpdateService;
 import com.wowoweather.app.util.HttpCallbackListener;
 import com.wowoweather.app.util.HttpUtil;
 import com.wowoweather.app.util.Utility;
@@ -140,6 +141,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	   currentDateText.setText(prefs.getString("current_date", ""));
 	   weatherInfoLayout.setVisibility(View.VISIBLE);
    	   cityNameText.setVisibility(View.VISIBLE);
+   	   Intent intent = new Intent(this,AutoUpdateService.class);
+   	   startService(intent);
    }
 }
 
