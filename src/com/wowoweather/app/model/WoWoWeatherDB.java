@@ -58,16 +58,16 @@ public class WoWoWeatherDB {
     	     db.insert("City", null, values);
     	 }
      }
-     public List<City> loadCity(){
+     public List<City> loadCity(int provinceId){
     	 List<City> list = new ArrayList<City>();
-    	 Cursor cursor = db.query("City", null,null, null, null, null, null);
+    	 Cursor cursor = db.query("City", null,"province_id=?", new String[]{String.valueOf(provinceId)}, null, null, null);
     	 if(cursor.moveToFirst()){
     		 do{
     			 City city = new City();
     			 city.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
     			 city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
     			 city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
-    			 city.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
+    			 city.setProvinceId(provinceId);
     			 list.add(city);
     		 }while(cursor.moveToNext());
     	 }
@@ -82,13 +82,13 @@ public class WoWoWeatherDB {
     	     db.insert("County", null, values);
     	 }
      }
-     public List<County> loadCounty(){
+     public List<County> loadCounty(int cityId){
     	 List<County> list = new ArrayList<County>();
-    	 Cursor cursor = db.query("County", null,null, null, null, null, null);
+    	 Cursor cursor = db.query("County", null,"city_id=?",new String[]{String.valueOf(cityId)}, null, null, null);
     	 if(cursor.moveToFirst()){
     		 do{
     			 County county = new County();
-    			 county.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
+    			 county.setCityId(cityId);
     			 county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
     			 county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
     			 county.setCountyId(cursor.getInt(cursor.getColumnIndex("county_id")));

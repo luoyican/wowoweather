@@ -46,14 +46,16 @@ public class ChooseAreaActivity extends Activity{
    private Province selectProvince;
    private City selectCity;
    private int currentLevel;
+   private boolean isFromWeatherActivity;
    
    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false)){
-			Intent intent = new Intent(this,ChooseAreaActivity.class);
+		if(prefs.getBoolean("city_selected", false)&& !isFromWeatherActivity){
+			Intent intent = new Intent(this,WeatherActivity.class);
 		    startActivity(intent);
 		    finish();
 		    return;
@@ -104,7 +106,7 @@ public class ChooseAreaActivity extends Activity{
 	   }
    }
    private void queryCities(){
-	   cityList = wowoWeatherDB.loadCity();
+	   cityList = wowoWeatherDB.loadCity(selectProvince.getProvinceId());
 	   if(cityList.size() > 0){
 		   dataList.clear();
 		   for(City city : cityList){
@@ -119,7 +121,7 @@ public class ChooseAreaActivity extends Activity{
 	   }
    }
    private void queryCounties(){
-	   countyList = wowoWeatherDB.loadCounty();
+	   countyList = wowoWeatherDB.loadCounty(selectCity.getCityId());
 	   if(countyList.size() > 0){
 		   dataList.clear();
 		   for(County county : countyList){
@@ -207,7 +209,12 @@ public class ChooseAreaActivity extends Activity{
 		   queryCities();
 	   }else if(currentLevel == CITY_LEVEL){
 		   queryProvinces();
-	   }else
-		   finish();
+	   }else{
+		   if(isFromWeatherActivity){
+		   Intent intent = new Intent(this,WeatherActivity.class);
+		   startActivity(intent);
+		   }
+			   finish();
+	   }
    }
 }
